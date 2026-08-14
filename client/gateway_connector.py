@@ -24,7 +24,6 @@ class HttpGatewayConnector:
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
                 response = await client.post(f"{self.base_url}/execute", json=request.as_json())
-                response.raise_for_status()
                 payload = response.json()
         except httpx.ConnectError as exc:
             raise GatewayUnavailable(f"Gateway unavailable at configured endpoint: {self.base_url}") from exc
@@ -56,4 +55,3 @@ class HttpGatewayConnector:
             raise GatewayUnavailable(f"Gateway timed out at configured endpoint: {self.base_url}") from exc
         except (httpx.HTTPError, ValueError) as exc:
             raise GatewayInvalidResponse(f"Invalid gateway response: {exc}") from exc
-

@@ -4,7 +4,7 @@ import argparse
 import asyncio
 import json
 import os
-import time
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -15,7 +15,7 @@ from client.scenarios import run_scenario
 
 
 def request_id() -> str:
-    return f"client-{int(time.time() * 1000)}"
+    return f"client-{uuid.uuid4().hex}"
 
 
 def parse_args() -> argparse.Namespace:

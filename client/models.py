@@ -24,9 +24,15 @@ REQUIRED_RESPONSE_KEYS = {"request_id", "status", "service_id", "operation", "re
 
 
 def validate_gateway_response(payload: dict[str, Any]) -> None:
+    if not isinstance(payload, dict):
+        raise ValueError("Invalid gateway response; expected a JSON object.")
     missing = REQUIRED_RESPONSE_KEYS - set(payload)
     if missing:
         raise ValueError(f"Invalid gateway response; missing keys: {sorted(missing)}")
     if payload["status"] not in {"success", "error"}:
         raise ValueError("Invalid gateway response; status must be success or error.")
-
+    if payload["status"] == "success":
+        if payload["result"] is None or payload["error"] is not None:
+            raise ValueError("Invalid success response invariant.")
+    elif payload["result"] is not None or not isinstance(payload["error"], dict):
+        raise ValueError("Invalid error response invariant.")
