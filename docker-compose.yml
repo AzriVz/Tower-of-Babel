@@ -1,4 +1,36 @@
 services:
+  gateway:
+    build: .
+    environment:
+      BABEL_STATE_DIR: /state
+      SERVICE_A_URL: http://service-a:8101
+      SERVICE_B_HOST: service-b
+      SERVICE_B_PORT: "8201"
+      SERVICE_C_HOST: service-c
+      SERVICE_C_PORT: "8301"
+    ports:
+      - "8080:8080"
+    volumes:
+      - gateway-state:/state
+      - ./plugins:/plugins:ro
+    networks: [babel-network]
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+    pids_limit: 256
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/status', timeout=3).read()"]
+      interval: 5s
+      timeout: 4s
+      retries: 6
+      start_period: 3s
+    depends_on:
+      - service-a
+      - service-b
+      - service-c
+
   service-a:
     image: babel-go-service-a:local
     environment:
@@ -50,3 +82,4 @@ networks:
 
 volumes:
   babel-state:
+  gateway-state:

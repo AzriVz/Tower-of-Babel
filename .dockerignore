@@ -1,0 +1,10 @@
+.git
+.pytest_cache
+**/__pycache__
+**/*.pyc
+.venv
+images
+laporan.pdf
+SOAL.md
+PLAN.md
+tests

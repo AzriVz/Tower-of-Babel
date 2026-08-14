@@ -3,7 +3,17 @@ name = "babel-candidate-kit"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+  "fastapi==0.141.1",
   "httpx==0.28.1",
+  "pydantic==2.13.4",
+  "uvicorn==0.52.3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.4.1",
+  "pytest-asyncio==1.4.0",
+  "reportlab==4.4.3",
 ]
 
 [project.scripts]
